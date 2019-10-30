@@ -65,7 +65,7 @@ export default class ProjectAddEdit extends Component {
         } else {
           //3.2 子类型 (parentID不为0的)
           const targetLv1Category = options.find(Lv1Item => {
-            return Lv1Item.key == item.parentID
+            return Lv1Item.key === item.parentID
           })
           // targetLv1Category.children=[]
           targetLv1Category.children.push({
@@ -89,7 +89,7 @@ export default class ProjectAddEdit extends Component {
     const response = await reqCategorys(parentID)
     //2 得到数据
     const { code, categorys } = response.data
-    if (code == 0) {
+    if (code === 0) {
       //3 配置options数据
       //3.1 如果请求1及类型 , 调用函数配置1及选项
       if (parentID === '0') {
