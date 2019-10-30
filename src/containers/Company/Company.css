@@ -1,0 +1,21 @@
+/* .ant-table-thead > tr > th{
+  padding: 16px 4px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: rgb(206, 225, 231);
+  text-align: center;
+}
+
+.ant-table-tbody > tr > td{
+  padding: 8px 4px;
+  text-align: center;
+} */
+
+
+.ant-form-item{
+  margin-bottom: 12px
+}
+
+.Add-span{
+  font-weight: bold;
+}

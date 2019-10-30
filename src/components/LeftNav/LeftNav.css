@@ -1,0 +1,19 @@
+.LeftNav {
+  color:white;
+  height: 100%;
+}
+
+.LeftNav-header{
+  display: flex;
+  align-items: center;
+}
+
+.LeftNav-header img{
+  height: 40px;
+  margin: 5px 15px;
+}
+
+.LeftNav-header h1,h2{
+  color: white;
+  margin: 0;
+}

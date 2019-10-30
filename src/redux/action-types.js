@@ -1,0 +1,9 @@
+
+
+export const USER_SUCCESS ='USER_SUCCESS'
+export const USER_FAIL ='USER_FAIL'
+export const USERLIST_RECIEVE ='USERLIST_RECIEVE'
+
+
+export const BG_COLOR_CHANGE ='BG_COLOR_CHANGE'
+export const FONT_COLOR_CHANGE ='FONT_COLOR_CHANGE'

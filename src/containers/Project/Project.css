@@ -1,0 +1,28 @@
+
+
+
+.ProjectDetail .list-header {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+.ProjectDetail .span-left {
+  /* font-weight: bold; */
+  margin: 0 16px;
+  color: grey ;
+}
+
+.ProjectDetail .span-right {
+  /* font-weight: bold; */
+  font-size: 16px;
+  color:#001529
+}
+
+.ProjectAddEdit-title{
+  font-size: 18px;
+  display: block;
+  margin-bottom: 5px;
+  /* font-weight: bold; */
+  color:#1890FF;
+}
