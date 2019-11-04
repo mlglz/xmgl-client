@@ -25,7 +25,7 @@ const { Item } = Form
 const { TextArea } = Input
 const { Option } = Select
 
-export default class ProjectAddEdit extends Component {
+class ProjectAddEdit extends Component {
   state = {
     leaders: [],
     companys: [],
@@ -121,7 +121,7 @@ export default class ProjectAddEdit extends Component {
     const targetOption = selectedOptions[0]
     targetOption.loading = true //loading视觉效果
     const targetID = targetOption.value
-    
+
     //2 按id请求categorys
     const childCategorys = await this.getCategorys(targetID)
     targetOption.loading = false
@@ -184,7 +184,24 @@ export default class ProjectAddEdit extends Component {
    * 提交表单
    */
   submit = () => {
-    console.log('submit the form')
+    const { validateFields } = this.props.form
+    validateFields((err, values) => {
+      if (err) {
+        return console.log('form error')
+      }
+
+      //除了项目类型id
+      const { category } = values
+      if (category.length > 1) {
+        //二级类型
+        values.categoryID = category[1]
+        values.categoryPID = category[0]
+      } else {
+        //一级类型
+        values.categoryID = category[0]
+      }
+      console.log(values)
+    })
   }
 
   render() {
@@ -229,6 +246,9 @@ export default class ProjectAddEdit extends Component {
       wrapperCol: { lg: 12 }
     }
 
+    //用于封装标签
+    const { getFieldDecorator } = this.props.form
+
     return (
       <Card className="ProjectAddEdit" title={title}>
         <Form {...formItemLayout} layout="horizontal">
@@ -236,12 +256,20 @@ export default class ProjectAddEdit extends Component {
           <Row gutter={16}>
             <Col span={16}>
               <Item label="项目名称" {...formItemLayout3_21}>
-                <Input placeholder="项目安全测评填写被测项目全称" />
+                {getFieldDecorator('name', {
+                  rules: [
+                    { required: true },
+                    { min: 4, message: 'at least 4 characters' }
+                  ],
+                  initialValue: '1234'
+                })(<Input placeholder="项目安全测评填写被测项目全称" />)}
               </Item>
             </Col>
             <Col span={8}>
               <Item label="项目编号" {...formItemLayout12_12}>
-                <Input placeholder="XT19000" />
+                {getFieldDecorator('number', {
+                  rules: []
+                })(<Input placeholder="XT19000" />)}
               </Item>
             </Col>
           </Row>
@@ -249,19 +277,21 @@ export default class ProjectAddEdit extends Component {
           <Row gutter={16}>
             <Col span={12}>
               <Item label="项目状态" {...formItemLayout4_20}>
-                <Select defaultValue="0">
-                  <Option value="0">未完成</Option>
-                  <Option value="3">已完成</Option>
-                </Select>
+                {getFieldDecorator('status', {
+                  initialValue: '0'
+                })(
+                  <Select>
+                    <Option value="0">未完成</Option>
+                    <Option value="3">已完成</Option>
+                  </Select>
+                )}
               </Item>
             </Col>
             <Col span={12}>
               <Item label="项目类型" {...formItemLayout4_20}>
-                <Cascader
-                  options={options}
-                  defaultValue={['5d5f466581b8b31b34fa69b1']}
-                  loadData={this.loadData}
-                />
+                {getFieldDecorator('category', {
+                  initialValue: ['5d831ed50a0211195855f7e2']
+                })(<Cascader options={options} loadData={this.loadData} />)}
               </Item>
             </Col>
           </Row>
@@ -269,52 +299,72 @@ export default class ProjectAddEdit extends Component {
           <Row gutter={16}>
             <Col span={12}>
               <Item label="项目经理" {...formItemLayout4_20}>
-                <Select>
-                  {leaders.map(item => (
-                    <Option value={item.leaderName} key={item._id}>
-                      {item.leaderName}
-                    </Option>
-                  ))}
-                </Select>
+                {getFieldDecorator('exeLeader', {
+                  rules: [{ required: true }]
+                })(
+                  <Select>
+                    {leaders.map(item => (
+                      <Option value={item.leaderName} key={item._id}>
+                        {item.leaderName}
+                      </Option>
+                    ))}
+                  </Select>
+                )}
               </Item>
             </Col>
             <Col span={12}>
               <Item label="合作机构" {...formItemLayout4_20}>
-                <Select>
-                  {companys.map(item => (
-                    <Option value={item.companyName} key={item._id}>
-                      {item.companyName}
-                    </Option>
-                  ))}
-                </Select>
+                {getFieldDecorator('exeCompany', {
+                  rules: []
+                })(
+                  <Select>
+                    {companys.map(item => (
+                      <Option value={item.companyName} key={item._id}>
+                        {item.companyName}
+                      </Option>
+                    ))}
+                  </Select>
+                )}
               </Item>
             </Col>
           </Row>
 
           <Item label="项目备注">
-            <TextArea placeholder="" rows={1} />
+            {getFieldDecorator('remark', {
+              rules: []
+            })(<TextArea placeholder="" rows={1} />)}
           </Item>
           <span className="ProjectAddEdit-title">项目单位</span>
           <Item label="单位名称">
-            <Input placeholder="项目单位名称" />
+            {getFieldDecorator('unit', {})(
+              <Input placeholder="项目单位名称" />
+            )}
           </Item>
           <Item label="单位地址">
-            <Input placeholder="项目单位地址" />
+            {getFieldDecorator('address', {})(
+              <Input placeholder="项目单位地址" />
+            )}
           </Item>
           <Row gutter={16}>
             <Col span={8}>
               <Item label="联系人" {...formItemLayout6_18}>
-                <Input placeholder="项目单位联系人" />
+                {getFieldDecorator('contact', {})(
+                  <Input placeholder="项目单位联系人" />
+                )}
               </Item>
             </Col>
             <Col span={8}>
               <Item label="电话" {...formItemLayout4_20}>
-                <Input placeholder="13500000000" />
+                {getFieldDecorator('contactPhone', {})(
+                  <Input placeholder="13500000000" />
+                )}
               </Item>
             </Col>
             <Col span={8}>
               <Item label="邮箱" {...formItemLayout4_20}>
-                <Input placeholder="xxx@xxx.com" />
+                {getFieldDecorator('contactMail', {})(
+                  <Input placeholder="xxx@xxx.com" />
+                )}
               </Item>
             </Col>
           </Row>
@@ -328,3 +378,5 @@ export default class ProjectAddEdit extends Component {
     )
   }
 }
+
+export default Form.create()(ProjectAddEdit)
