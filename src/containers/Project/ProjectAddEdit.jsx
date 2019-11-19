@@ -10,6 +10,7 @@ import {
   Form,
   Input,
   Icon,
+  message,
   Cascader,
   Row,
   Select
@@ -20,6 +21,7 @@ import LinkButton from '../../components/LinkButton/LinkButton'
 import { reqLeaders } from '../../api/leader'
 import { reqCompanys } from '../../api/company'
 import { reqCategorys } from '../../api/index'
+import { reqAddProject } from '../../api/project'
 
 const { Item } = Form
 const { TextArea } = Input
@@ -185,7 +187,7 @@ class ProjectAddEdit extends Component {
    */
   submit = () => {
     const { validateFields } = this.props.form
-    validateFields((err, values) => {
+    validateFields(async (err, values) => {
       if (err) {
         return console.log('form error')
       }
@@ -200,7 +202,17 @@ class ProjectAddEdit extends Component {
         //一级类型
         values.categoryID = category[0]
       }
-      console.log(values)
+      // console.log(values)
+      //2 提交
+      const response = await reqAddProject(values)
+      //3 处理响应
+      // console.log(response)
+      const { code, msg } = response.data
+      if (code !== 0) {
+        return message.error(msg, 0.5)
+      }
+      message.success(msg, 0.5)
+      this.props.history.push('/project')
     })
   }
 
@@ -222,10 +234,10 @@ class ProjectAddEdit extends Component {
       wrapperCol: { md: 21, lg: 22 }
     }
 
-    const formItemLayout1 = {
-      labelCol: { md: 3, lg: 2 },
-      wrapperCol: { md: 21, lg: 22 }
-    }
+    // const formItemLayout1 = {
+    //   labelCol: { md: 3, lg: 2 },
+    //   wrapperCol: { md: 21, lg: 22 }
+    // }
 
     const formItemLayout3_21 = {
       labelCol: { lg: 3 },
@@ -336,35 +348,39 @@ class ProjectAddEdit extends Component {
           </Item>
           <span className="ProjectAddEdit-title">项目单位</span>
           <Item label="单位名称">
-            {getFieldDecorator('unit', {})(
+            {getFieldDecorator('unit', { rules: [{ required: true }] })(
               <Input placeholder="项目单位名称" />
             )}
           </Item>
           <Item label="单位地址">
-            {getFieldDecorator('address', {})(
-              <Input placeholder="项目单位地址" />
-            )}
+            {getFieldDecorator(
+              'address',
+              {}
+            )(<Input placeholder="项目单位地址" />)}
           </Item>
           <Row gutter={16}>
             <Col span={8}>
               <Item label="联系人" {...formItemLayout6_18}>
-                {getFieldDecorator('contact', {})(
-                  <Input placeholder="项目单位联系人" />
-                )}
+                {getFieldDecorator(
+                  'contact',
+                  {}
+                )(<Input placeholder="项目单位联系人" />)}
               </Item>
             </Col>
             <Col span={8}>
               <Item label="电话" {...formItemLayout4_20}>
-                {getFieldDecorator('contactPhone', {})(
-                  <Input placeholder="13500000000" />
-                )}
+                {getFieldDecorator(
+                  'contactPhone',
+                  {}
+                )(<Input placeholder="13500000000" />)}
               </Item>
             </Col>
             <Col span={8}>
               <Item label="邮箱" {...formItemLayout4_20}>
-                {getFieldDecorator('contactMail', {})(
-                  <Input placeholder="xxx@xxx.com" />
-                )}
+                {getFieldDecorator(
+                  'contactMail',
+                  {}
+                )(<Input placeholder="xxx@xxx.com" />)}
               </Item>
             </Col>
           </Row>
