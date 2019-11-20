@@ -6,7 +6,7 @@ import { Card, Select, Table, Icon, Button, Input, message } from 'antd'
 
 // import './ProjectHome.css'
 import LinkButton from '../../components/LinkButton/LinkButton'
-import { reqProjectsList, reqSearchProjects } from '../../api/project'
+import { reqProjectsList, reqSearchProjects , reqDelProject } from '../../api/project'
 import { PROJECT_PAGESIZE } from '../../config/constant'
 
 const Option = Select.Option
@@ -129,10 +129,22 @@ export default class ProjectHome extends Component {
               Detail
             </LinkButton>
             <LinkButton onClick={() => this.showEdit(item)}>Edit</LinkButton>
+            <LinkButton onClick={() => this.delProject(item)}>Del</LinkButton>
           </span>
         )
       }
     ]
+  }
+
+  /**
+   * 功能 删除指定project
+   */
+  delProject = (item)=>{
+    const {_id,name} = item
+    if(window.confirm(`确定要删除项目 ${name} ?`)){
+      reqDelProject(_id)
+      this.recieveProjectsList(1) 
+    }   
   }
 
   render() {
