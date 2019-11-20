@@ -6,14 +6,21 @@ import { Card, Select, Table, Icon, Button, Input, message } from 'antd'
 
 // import './ProjectHome.css'
 import LinkButton from '../../components/LinkButton/LinkButton'
-import { reqProjectsList, reqSearchProjects , reqDelProject } from '../../api/project'
+import {
+  reqProjectsList,
+  reqSearchProjects,
+  reqDelProject
+} from '../../api/project'
+import { reqLeaders } from '../../api/leader'
 import { PROJECT_PAGESIZE } from '../../config/constant'
+
 
 const Option = Select.Option
 
 export default class ProjectHome extends Component {
   state = {
     projects: [],
+    leaders: [],
     loading: false,
     total: 0,
     searchType: 'name',
@@ -29,6 +36,7 @@ export default class ProjectHome extends Component {
   //准备projects数据
   componentDidMount() {
     this.recieveProjectsList(1) //默认显示第一页
+    this.recieveLeaders()
   }
 
   /**
@@ -62,6 +70,34 @@ export default class ProjectHome extends Component {
     } else {
       return message.error(msg)
     }
+  }
+
+  /**
+   * 功能 按leader过滤projects
+   */
+  filterByleader = value=>{
+    this.setState({
+      searchType:'exeLeader',
+      keyword : value
+    },()=>{
+      this.recieveProjectsList(1)
+    })
+  }
+
+  /**
+   * 得到负责人
+   */
+  recieveLeaders = async () => {
+    //1 request data
+    const response = await reqLeaders()
+    const leaders = response.data.leaders //服务器响应数据 {coed , msg ,leaders}
+    leaders.forEach(item => {
+      item.key = item._id
+    })
+    //2 updata state
+    this.setState({
+      leaders
+    })
   }
 
   //回车提交搜索
@@ -139,23 +175,37 @@ export default class ProjectHome extends Component {
   /**
    * 功能 删除指定project
    */
-  delProject = (item)=>{
-    const {_id,name} = item
-    if(window.confirm(`确定要删除项目 ${name} ?`)){
+  delProject = item => {
+    const { _id, name } = item
+    if (window.confirm(`确定要删除项目 ${name} ?`)) {
       reqDelProject(_id)
-      this.recieveProjectsList(1) 
-    }   
+      this.recieveProjectsList(1)
+    }
   }
 
   render() {
-    const { projects, total, loading, searchType, keyword } = this.state
+    const {
+      projects,
+      total,
+      loading,
+      searchType,
+      keyword,
+      leaders
+    } = this.state
     //左上角
     const title = (
       <div>
         <div>
-          <Select style={{ width: 100 }} placeholder="负责人">
-            <Option value="0">刘德华</Option>
-            <Option value="3">张学友</Option>
+          <Select
+            style={{ width: 100 }}
+            placeholder="负责人"
+            onChange={value => this.filterByleader(value)}
+          >
+            {leaders.map(item => (
+              <Option value={item.leaderName} key={item.leaderName}>
+                {item.leaderName}
+              </Option>
+            ))}
             <Option value="">所有负责人</Option>
           </Select>
           <Select

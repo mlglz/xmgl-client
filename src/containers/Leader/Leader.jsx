@@ -93,7 +93,7 @@ export default class Leader extends Component {
   }
 
   /**
-   * 得到项目负责人(1级或2级)
+   * 得到项目负责人
    * //1请求数据
    * //2更新state
    */
