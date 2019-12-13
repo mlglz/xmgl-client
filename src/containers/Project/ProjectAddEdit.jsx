@@ -18,6 +18,7 @@ import {
 
 // import './Role.css'
 import LinkButton from '../../components/LinkButton/LinkButton'
+import PW from './PictureWall'
 import { reqLeaders } from '../../api/leader'
 import { reqCompanys } from '../../api/company'
 import { reqCategorys } from '../../api/index'
@@ -384,6 +385,9 @@ class ProjectAddEdit extends Component {
               </Item>
             </Col>
           </Row>
+          <Item>
+            <PW/>
+          </Item>
           <div style={{ textAlign: 'center' }}>
             <Button type="primary" onClick={this.submit}>
               Submit
